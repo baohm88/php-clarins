@@ -150,4 +150,22 @@ class BaseModel extends BaseController
             }
         }
     }
+    function filter_return_value($a_data, $keysToRemove): array
+    {
+
+        // Remove specified keys from the product array
+        $a_return_data = [];
+        $x = -1;
+        foreach ($a_data as $data) {
+            $x++;
+            foreach ($data as $key => $value) {
+                if (in_array($key, $keysToRemove)) {
+                    continue;
+                }
+                $a_return_data[$x][$key] = $value;
+            }
+        }
+
+        return $a_return_data;
+    }
 }
