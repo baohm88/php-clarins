@@ -24,10 +24,10 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `orderitems`
+-- Table structure for table `order_items`
 --
 
-CREATE TABLE `orderitems` (
+CREATE TABLE `order_items` (
   `order_id` int(11) NOT NULL,
   `product_id` int(11) NOT NULL,
   `product_name` varchar(200) NOT NULL,
@@ -36,10 +36,10 @@ CREATE TABLE `orderitems` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `orderitems`
+-- Dumping data for table `order_items`
 --
 
-INSERT INTO `orderitems` (`order_id`, `product_id`, `product_name`, `product_price`, `product_qty`) VALUES
+INSERT INTO `order_items` (`order_id`, `product_id`, `product_name`, `product_price`, `product_qty`) VALUES
 (253, 2, 'Dry Touch Facial Sunscreen - Broad Spectrum SPF 50+', 40.000000000, 2),
 (253, 14, 'Lip Perfector 2-in-1 Lip and Cheek Color Balm', 30.000000000, 5),
 (254, 5, 'UV Plus SPF 50 Anti Pollution Face Sunscreen', 46.000000000, 6),
@@ -81,20 +81,20 @@ INSERT INTO `orders` (`order_id`, `user_id`, `order_value`, `order_date`, `statu
 -- --------------------------------------------------------
 
 --
--- Table structure for table `productimages`
+-- Table structure for table `product_images`
 --
 
-CREATE TABLE `productimages` (
+CREATE TABLE `product_images` (
   `image_id` int(11) NOT NULL,
   `image_url` varchar(255) NOT NULL,
   `product_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `productimages`
+-- Dumping data for table `product_images`
 --
 
-INSERT INTO `productimages` (`image_id`, `image_url`, `product_id`) VALUES
+INSERT INTO `product_images` (`image_id`, `image_url`, `product_id`) VALUES
 (101, 'https://www.clarinsusa.com/dw/image/v2/AAFS_PRD/on/demandware.static/-/Sites-clarins-master-products/default/dw6fa700a4/original/80104492_original_original_A.jpg?sw=680&sh=680', 1),
 (106, 'https://www.clarinsusa.com/dw/image/v2/AAFS_PRD/on/demandware.static/-/Sites-clarins-master-products/en_US/dw2a92f871/original/80104492_original_original_B.jpg?sw=680&sh=680', 1),
 (107, 'https://www.clarinsusa.com/dw/image/v2/AAFS_PRD/on/demandware.static/-/Sites-clarins-master-products/en_US/dw369b038c/original/80104492_original_original_C.jpg?sw=1000&sh=1000', 1),
@@ -353,10 +353,10 @@ INSERT INTO `productimages` (`image_id`, `image_url`, `product_id`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `productrating`
+-- Table structure for table `product_rating`
 --
 
-CREATE TABLE `productrating` (
+CREATE TABLE `product_rating` (
   `rating_id` int(11) NOT NULL,
   `product_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
@@ -366,10 +366,10 @@ CREATE TABLE `productrating` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `productrating`
+-- Dumping data for table `product_rating`
 --
 
-INSERT INTO `productrating` (`rating_id`, `product_id`, `user_id`, `review_date`, `rating`, `rating_comment`) VALUES
+INSERT INTO `product_rating` (`rating_id`, `product_id`, `user_id`, `review_date`, `rating`, `rating_comment`) VALUES
 (1, 1, 121, '1976-07-09', 1, 'This serum clogs my pores and causes acne. I wish I had not spent so much on the purchase. I will be requesting a refund'),
 (2, 1, 122, '2024-03-18', 3, 'It does make my skin feel really silky smooth. It is a small package. There is no perfume smell to it like most serums. I will buy to try longterm to see how effective it is or just for the silky feeling without and oily residue.'),
 (3, 1, 121, '2012-02-28', 4, 'The serum feels luxurious and lightweight upon application, absorbing quickly without leaving any greasy residue.'),
@@ -500,9 +500,9 @@ INSERT INTO `users` (`user_id`, `username`, `password`, `email`, `is_admin`, `is
 --
 
 --
--- Indexes for table `orderitems`
+-- Indexes for table `order_items`
 --
-ALTER TABLE `orderitems`
+ALTER TABLE `order_items`
   ADD PRIMARY KEY (`order_id`,`product_id`);
 
 --
@@ -512,15 +512,15 @@ ALTER TABLE `orders`
   ADD PRIMARY KEY (`order_id`);
 
 --
--- Indexes for table `productimages`
+-- Indexes for table `product_images`
 --
-ALTER TABLE `productimages`
+ALTER TABLE `product_images`
   ADD PRIMARY KEY (`image_id`);
 
 --
--- Indexes for table `productrating`
+-- Indexes for table `product_rating`
 --
-ALTER TABLE `productrating`
+ALTER TABLE `product_rating`
   ADD PRIMARY KEY (`rating_id`);
 
 --
@@ -546,15 +546,15 @@ ALTER TABLE `orders`
   MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=266;
 
 --
--- AUTO_INCREMENT for table `productimages`
+-- AUTO_INCREMENT for table `product_images`
 --
-ALTER TABLE `productimages`
+ALTER TABLE `product_images`
   MODIFY `image_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=371;
 
 --
--- AUTO_INCREMENT for table `productrating`
+-- AUTO_INCREMENT for table `product_rating`
 --
-ALTER TABLE `productrating`
+ALTER TABLE `product_rating`
   MODIFY `rating_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=329;
 
 --

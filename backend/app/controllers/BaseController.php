@@ -24,10 +24,9 @@ class BaseController
     public function initModel($modelName, $conn)
     {
         try {
-
             $file = self::MODEL_PATH . $modelName . ".php";
-            if (file_exists($file)) {
 
+            if (file_exists($file)) {
                 include_once($file);
                 if (class_exists($modelName)) {
                     $modelInstance = new $modelName($conn);
@@ -69,58 +68,19 @@ class BaseController
         return $instance;
     }
 
-    public function create_sql_param_for_sql($o_instance, $method)
+    public function unset_instance_vars($instance, $allow_vars)
     {
-        if ($method == "PUT") {
-            $reflection = new ReflectionClass($o_instance);
-            $properties = $reflection->getProperties();
-            $str = "";
-            foreach ($properties as $property) {
-                $property_name = substr($property->name, 2);
-                if (in_array($property_name, ["instance_model", "conn", "product_images"])) {
-                    continue;
-                }
-
-                $str .= $property_name . " = :" . $property_name . ",";
-            }
-            $str =  rtrim($str, ", ");
-            return $str . " ";
-        } else if ($method == "POST") {
-            $reflection = new ReflectionClass($o_instance);
-            $properties = $reflection->getProperties();
-            $col = "";
-            $value = "";
-            foreach ($properties as $property) {
-                $property_name = substr($property->name, 2);
-                if (in_array($property_name, ["instance_model", "conn", "product_images"])) {
-                    continue;
-                }
-
-                $col .= $property_name . ", ";
-                $value .= ":" . $property_name . ", ";
-            }
-            $arr = [];
-            $arr["col"] = rtrim($col, ", ");
-            $arr["value"] = rtrim($value, ", ");
-            return $arr;
-        }
-    }
-
-    public function bind_instance_value($o_instance, $stmt)
-    {
-        $reflection = new ReflectionClass($o_instance);
-        $properties = $reflection->getProperties();
+        $obj = new ReflectionClass($instance);
+        $properties = $obj->getProperties();
+        $return_obj = new stdClass();
         foreach ($properties as $property) {
-            $property_name = substr($property->name, 2);
-            if (in_array($property_name, ["instance_model", "conn", "product_images"])) {
-                continue;
-            }
-            $get_method = "get_" . $property_name;
-            if (in_array($property_name, ["stock_qty", "product_id", "rating", "user_id"])) {
-                $stmt->bindValue($property_name, $o_instance->$get_method(), PDO::PARAM_INT);
-            } else {
-                $stmt->bindValue($property_name, $o_instance->$get_method(), PDO::PARAM_STR);
+            $name = $property->getName();
+            $value = $property->getValue($instance);
+            if (in_array($name, $allow_vars) && $value != "") {
+
+                $return_obj->$name = $value;
             }
         }
+        return $return_obj;
     }
 }

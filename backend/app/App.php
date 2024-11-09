@@ -1,5 +1,5 @@
 <?php
-class App
+class App extends BaseController
 {
     private $__conn, $__controller, $__action, $__params, $__instanceController;
     public function __construct($conn)
@@ -14,7 +14,9 @@ class App
     private function getURI()
     {
         $uri = $_SERVER["REQUEST_URI"];
-        $uri = str_replace("/project/", "", $uri);
+        $uri = str_replace("/php-clarins/backend/", "", $uri);
+        // echo $uri;
+        // die;
         if ($uri != "") {
             return $uri;
         }
@@ -50,11 +52,8 @@ class App
             if (file_exists($filePath)) {
                 include_once $filePath;
                 if (class_exists($this->__controller)) {
-
                     $this->__instanceController = new $this->__controller($this->__conn);
                     if (method_exists($this->__instanceController, $this->__action)) {
-                        // var_dump($this->__params);
-                        // die();
                         call_user_func_array([$this->__instanceController, $this->__action],  $this->__params);
                     } else {
                         echo "method not exist";
