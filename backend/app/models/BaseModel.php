@@ -86,4 +86,68 @@ class BaseModel extends BaseController
             $this->FactoryMessage("error", "User ID Not Found");
         }
     }
+
+    public function create_sql_param_for_sql($o_instance, $method)
+    {
+        $properties = get_object_vars($o_instance);
+        $x = 0;
+        $str = "";
+        $order_by = "";
+        foreach ($properties as $property => $value) {
+            $property_name = substr($property, 2);
+            switch ($property_name) {
+                case "max":
+                    $str .= " AND product_price < :$property_name";
+                    break;
+                case "min":
+                    $str .= " AND product_price > :$property_name";
+                    break;
+
+                case "limit":
+                    $str .= " LIMIT :$property_name";
+                    break;
+                case "offset":
+                    $str .= " OFFSET :$property_name";
+                    break;
+
+                case "name":
+                case "price":
+                    $str .= " ORDER BY " . $property_name . " " . strtoupper($value);
+                    break;
+
+                default:
+                    break;
+            }
+        }
+        return substr($str, 4) . $order_by;
+    }
+
+    public function bind_instance_value($o_instance, $stmt)
+    {
+        $properties = get_object_vars($o_instance);
+        foreach ($properties as $property => $value) {
+            $property_name = substr($property, 2);
+            switch ($property_name) {
+                    // case "price":
+                    // case "name":
+                    //     $param_type = PDO::PARAM_STR;
+                    //     $stmt->bindValue(":$property", $value, $param_type);
+                    //     break;
+                case "max":
+                case "min":
+                case "limit":
+                    $value = (int) $value;
+                    $param_type = PDO::PARAM_INT;
+                    $stmt->bindValue(":$property_name", $value, $param_type);
+                    break;
+                case "offset":
+                    $param_type = PDO::PARAM_INT;
+                    $value = (int)$value * 8;
+                    $stmt->bindValue(":$property_name", $value, $param_type);
+                    break;
+                default:
+                    $param_type = PDO::PARAM_STR;
+            }
+        }
+    }
 }

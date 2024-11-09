@@ -1,77 +1,76 @@
 <?php
 class CollectionsController extends BaseController
 {
-    private $__instanceModel;
+    private $__collectionName, $__instanceCollectionsModel, $__min, $__max, $__product_name, $__product_price, $__limit = 8,  $__offset;
+    private $__a_allow_var = [
+        '__offset',
+        '__min',
+        '__max',
+        '__product_name',
+        '__limit',
+        '__product_price'
+
+    ];
     public function __construct($conn)
     {
-        $this->__instanceModel = $this->initModel("CollectionsModel", $conn);
+        $this->__instanceCollectionsModel = $this->initModel("CollectionsModel", $conn);
     }
 
-    public function all()
+    protected function set_min($min)
     {
-        $products = $this->__instanceModel->getAllProducts();
-        $this->FactoryMessage("success", "This is products obj", $products);
+        $this->__min = $min;
     }
 
-    public function skincare($params = [])
+    public function get_min(): string
     {
-        $inputs = json_decode(file_get_contents('php://input'), true);
-        $allowed_keys = ['max_price', 'min_price', 'order_by', 'offset'];
-        foreach ($allowed_keys as $key) {
-            if (!empty($inputs[$key])) {
-                ${$key} = $inputs[$key];
-            }
-        }
-        $data = $this->__instanceModel->getCollectionProducts(
-            "Skincare",
-            order_by: $params["order_by"] ?? null,
-            min_price: $params["min_price"] ?? null,
-            max_price: $params["max_price"] ?? null,
-            desc: $params["desc"] ?? true
-        );
-        $this->FactoryMessage("success", "This is products array", $data);
+        return $this->__min;
     }
 
 
-    public function makeup($params = [])
+
+    protected function set_max($max)
     {
-        $inputs = json_decode(file_get_contents('php://input'), true);
-        $allowed_keys = ['max_price', 'min_price', 'order_by', 'offset'];
-        foreach ($allowed_keys as $key) {
-            if (!empty($inputs[$key])) {
-                ${$key} = $inputs[$key];
-            }
-        }
-        $data = $this->__instanceModel->getCollectionProducts(
-            "Makeup",
-            order_by: $params["order_by"] ?? null,
-            min_price: $params["min_price"] ?? null,
-            max_price: $params["max_price"] ?? null,
-            desc: $params["desc"] ?? true
-        );
-        if (!empty($data)) {
-            $this->FactoryMessage("success", "This is products array", $data);
-        }
+        $this->__max = $max;
     }
 
-    public function product($params = [])
+    public function get_max(): string
     {
-        // Check if 'id' is passed in the parameters
-        if (!isset($params['id'])) {
-            $this->FactoryMessage("error", "Product ID is required");
-            return;
-        }
+        return $this->__max;
+    }
 
-        $productId = $params['id']; // Get the product ID from the parameters
-        $product = $this->__instanceModel->getProductById($productId);
+    protected function set_product_name($name)
+    {
+        $this->__product_name = $name;
+    }
 
-        // If the product exists, return it; otherwise, return an error message
-        if ($product) {
-            $product_ratings = $this->__instanceModel->getProductRatingsById($productId);
-            $product['product_ratings'] = $product_ratings; // Corrected syntax here
-            $this->FactoryMessage("success", "Product found", $product);
-        } else {
-            $this->FactoryMessage("error", "Product not found");
-        }
+    public function get_product_name(): string
+    {
+        return $this->__product_name;
+    }
+
+    protected function set_product_price($price)
+    {
+        $this->__product_price = $price;
+    }
+
+    public function get_product_price(): string
+    {
+        return $this->__product_price;
+    }
+
+    protected function set_offset($offset)
+    {
+        $this->__offset = $offset;
+    }
+
+    public function get_offset(): string
+    {
+        return $this->__offset;
+    }
+    public function all($params)
+    {
+        $instance = $this->insert_data_to_instance($this, $params);
+        $obj = $this->unset_instance_vars($this, $this->__a_allow_var);
+        $this->__instanceCollectionsModel->all($obj);
     }
 }
