@@ -90,7 +90,8 @@ class BaseModel extends BaseController
     public function create_sql_param_for_sql($o_instance, $method)
     {
         $properties = get_object_vars($o_instance);
-        $x = 0;
+        // $this->viewData($properties);
+        // die;
         $str = "";
         $order_by = "";
         foreach ($properties as $property => $value) {
@@ -104,21 +105,28 @@ class BaseModel extends BaseController
                     break;
 
                 case "limit":
-                    $str .= " LIMIT :$property_name";
+                    $order_by .= " LIMIT :$property_name";
                     break;
                 case "offset":
-                    $str .= " OFFSET :$property_name";
+                    $order_by .= " OFFSET :$property_name";
                     break;
-
-                case "name":
-                case "price":
-                    $str .= " ORDER BY " . $property_name . " " . strtoupper($value);
+                case "sub_category":
+                    $str .= "AND sub_category_name = :$property_name ";
+                    break;
+                case "main_category":
+                    $str .= " AND main_category_name = :$property_name ";
+                    break;
+                case "product_name":
+                case "product_price":
+                    $order_by .= " ORDER BY " . $property_name . " " . strtoupper($value);
                     break;
 
                 default:
                     break;
             }
         }
+        // var_dump($str . $order_by);
+        // die;
         return substr($str, 4) . $order_by;
     }
 
@@ -128,11 +136,11 @@ class BaseModel extends BaseController
         foreach ($properties as $property => $value) {
             $property_name = substr($property, 2);
             switch ($property_name) {
-                    // case "price":
-                    // case "name":
-                    //     $param_type = PDO::PARAM_STR;
-                    //     $stmt->bindValue(":$property", $value, $param_type);
-                    //     break;
+                case "main_category":
+                case "sub_category":
+                    $param_type = PDO::PARAM_STR;
+                    $stmt->bindValue(":$property_name", $value, $param_type);
+                    break;
                 case "max":
                 case "min":
                 case "limit":
